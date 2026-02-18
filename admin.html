@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Monitoring</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container { max-width: 800px; width: 95%; }
+        .table-wrapper {
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        table { width: 100%; border-collapse: collapse; color: white; }
+        th { background: var(--secondary); padding: 15px; position: sticky; top: 0; font-size: 13px; z-index: 10; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); text-align: center; }
+        .user-name { color: var(--primary); font-weight: bold; }
+        .controls { margin-top: 25px; display: flex; justify-content: center; }
+        .status-bar { margin-bottom: 15px; font-size: 14px; color: #888; display: flex; align-items: center; justify-content: center; }
+        .dot { height: 8px; width: 8px; background-color: #00ff00; border-radius: 50%; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px #00ff00; }
+
+        /* Кастомный скроллбар для красоты */
+        .table-wrapper::-webkit-scrollbar { width: 6px; }
+        .table-wrapper::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Система Мониторинга</h1>
+        <div class="status-bar">
+            <span class="dot"></span> LIVE: Поток данных активен
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Имя пользователя</th>
+                        <th>Время (МСК)</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table">
+                    <tr><td colspan="3">Синхронизация...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="controls">
+            <button onclick="fetchData()">Обновить список</button>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/names');
+                if (!response.ok) throw new Error('Ошибка сети');
+
+                const data = await response.json();
+                const tableBody = document.getElementById('data-table');
+
+                if (!data || data.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="3">Пока никто не зарегистрировался</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                data.forEach(user => {
+                    const date = new Date(user.created_at).toLocaleString('ru-RU');
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td style="opacity: 0.4">#${user.id}</td>
+                            <td class="user-name">${user.name}</td>
+                            <td>${date}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error('Ошибка мониторинга:', err);
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="3" style="color: #ff4d4d;">Потеряна связь с сервером</td></tr>';
+            }
+        }
+
+        // Автообновление каждые 5 секунд
+        setInterval(fetchData, 5000);
+        // Загрузка при открытии
+        fetchData();
+    </script>
+</body>
+</html>
