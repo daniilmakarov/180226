@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // 1. Подключение к базе (создаст файл database.sqlite автоматически)
 const db = new sqlite3.Database('./database.sqlite', (err) => {
@@ -42,4 +42,5 @@ app.post('/api/save-name', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`🚀 Сервер на SQLite запущен: http://localhost:${PORT}`);
+
 });
