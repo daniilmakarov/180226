@@ -1,23 +1,22 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Отправка имени</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Portal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Добро пожаловать</h1>
-        <p>Введите ваше имя ниже, чтобы сохранить его в нашей базе данных.</p>
-
+        <h1>Вход в систему</h1>
         <form id="nameForm">
-            <input type="text" id="userName" placeholder="Ваше имя" required>
-            <button type="submit">Отправить</button>
+            <div class="input-group">
+                <input type="text" id="userName" placeholder="Введите ваше имя" required>
+            </div>
+            <button type="submit">Зарегистрироваться</button>
         </form>
-
         <div id="message"></div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
