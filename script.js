@@ -6,7 +6,7 @@ document.getElementById('nameForm').addEventListener('submit', async (e) => {
 
     try {
         // Отправляем данные на локальный сервер (порт 3000)
-        const response = await fetch('http://localhost:3000/api/save-name', {
+        const response = await fetch('/api/save-name', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,4 +25,5 @@ document.getElementById('nameForm').addEventListener('submit', async (e) => {
         console.error('Ошибка:', error);
         messageDiv.innerText = "Сервер не отвечает.";
     }
+
 });
